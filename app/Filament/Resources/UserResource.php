@@ -32,12 +32,17 @@ class UserResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Select::make('role')
                     ->options([
-                        '1' => 'Student',
-                        '2' => 'Instructor',
-                        '3' => 'Admin',
+                        1 => 'Admin',
+                        2 => 'Instructor',
+                        3 => 'Student',
                     ])
                     ->required(),
-
+                Forms\Components\TextInput::make('password')
+                    ->default('password')
+                    ->required(fn($context) => $context === 'create')
+                    ->dehydrated(fn($state) => filled($state))
+                    ->dehydrated(fn($state) => filled($state))
+                    ->dehydrated(fn($state) => filled($state))
             ]);
     }
 
@@ -50,9 +55,9 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('role')
                     ->badge()
                     ->formatStateUsing(fn($state) => match ($state) {
-                        1 => 'Student',
+                        1 => 'Admin',
                         2 => 'Instructor',
-                        3 => 'Admin',
+                        3 => 'Student',
                     })
                     ->color(fn($state) => match ($state) {
                         1 => 'danger',

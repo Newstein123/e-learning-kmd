@@ -30,7 +30,9 @@ class CourseResource extends Resource
                     ->required()
                     ->maxLength(65535),
                 Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name', fn($query) => $query->where('role', 2))
+                    ->relationship('user', 'name', fn($query) => $query->where('role', 2)) // instructor role id
+                    ->placeholder('Select Instructor')
+                    ->label('Instructor')
                     ->required(),
                 Forms\Components\TextInput::make('price')
                     ->required()

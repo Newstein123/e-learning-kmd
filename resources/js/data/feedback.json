@@ -1,0 +1,29 @@
+[
+    {
+        "id": 1,    
+        "name": "John Doe",
+        "avatar": "https://i.pravatar.cc/150?img=1",
+        "email": "john@doe.com",
+        "position": "Software Engineer",
+        "feedback": "This is a feedback",
+        "rating": 5
+    },
+    {
+        "id": 2,
+        "name": "Jane Doe",
+        "avatar": "https://i.pravatar.cc/150?img=2",
+        "email": "jane@doe.com",
+        "position": "Software Engineer",
+        "feedback": "This is a feedback",
+        "rating": 5
+    },
+    {
+        "id": 3,
+        "name": "John Doe",
+        "avatar": "https://i.pravatar.cc/150?img=3",
+        "email": "john@doe.com",
+        "position": "Software Engineer",
+        "feedback": "This is a feedback",
+        "rating": 5
+    }
+]

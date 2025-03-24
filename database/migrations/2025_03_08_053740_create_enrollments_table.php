@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId("user_id")->constrained("users");
             $table->foreignId("course_id")->constrained("courses");
             $table->dateTime("enrolled_at");
+            $table->string("note")->nullable();
             $table->timestamps();
         });
     }

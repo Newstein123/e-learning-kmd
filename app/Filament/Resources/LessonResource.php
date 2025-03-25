@@ -29,7 +29,7 @@ class LessonResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Textarea::make('description')
+                Forms\Components\RichEditor::make('description')
                     ->required()
                     ->maxLength(65535),
                 Forms\Components\TextInput::make('video_url')

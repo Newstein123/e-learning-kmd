@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import { router, usePage } from "@inertiajs/react";
 import CourseCard from "../CourseCard";
-import { Button, Link } from "@heroui/react";
-
+import { Button } from "@heroui/react";
+import { Link } from "@inertiajs/react";
 const CourseSection = () => {
     const { categories, courses } = usePage().props;
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -61,7 +61,7 @@ const CourseSection = () => {
                 )}
             </div>
             <div className="flex justify-center items-center mt-10">
-                <Button as={Link} href="#" color="secondary">
+                <Button as={Link} href={route("courses")} color="secondary">
                     View All Courses
                 </Button>
             </div>

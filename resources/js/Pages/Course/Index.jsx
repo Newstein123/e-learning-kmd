@@ -3,8 +3,10 @@ import FrontendLayout from "@/Layouts/FrontendLayout";
 import React, { useState } from "react";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import { router } from "@inertiajs/react";
+import { Pagination } from "@heroui/react";
 const Index = ({ courses, categories }) => {
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [currentPage, setCurrentPage] = useState(courses.current_page);
     const handleCategoryClick = (id) => {
         setSelectedCategory(id);
         router.get(
@@ -17,6 +19,19 @@ const Index = ({ courses, categories }) => {
             }
         );
     };
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+        router.get(
+            route("courses"),
+            { category_id: selectedCategory, page },
+            {
+                preserveState: true,
+                preserveScroll: true,
+            }
+        );
+    };
+
     return (
         <div className="container mx-auto px-4 py-16">
             <h1 className="text-4xl font-bold text-center my-5">All Courses</h1>
@@ -48,17 +63,27 @@ const Index = ({ courses, categories }) => {
                     ))}
                 </Splide>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {courses.data.length > 0 ? (
-                    courses.data.map((course) => (
-                        <CourseCard key={course.id} course={course} />
-                    ))
-                ) : (
-                    <div className="col-span-full text-center text-2xl font-bold my-10">
-                        No courses found
+            {courses.data.length > 0 ? (
+                <div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {courses.data.map((course) => (
+                            <CourseCard key={course.id} course={course} />
+                        ))}
                     </div>
-                )}
-            </div>
+                    <div className="flex flex-wrap gap-4 items-center justify-center my-10">
+                        <Pagination
+                            color="secondary"
+                            initialPage={currentPage}
+                            total={courses.totalPages}
+                            onChange={(page) => handlePageChange(page)}
+                        />
+                    </div>
+                </div>
+            ) : (
+                <div className="col-span-full text-center text-2xl font-bold my-10">
+                    No courses found
+                </div>
+            )}
         </div>
     );
 };

@@ -16,6 +16,14 @@ class Course extends Model
         'thumbnail',
         'is_active',
         'user_id',
+        'category_id',
+        'has_certificate',
+        'level',
+        'language',
+    ];
+
+    protected $casts = [
+        'has_certificate' => 'boolean',
     ];
 
     public function instructor()
@@ -31,5 +39,10 @@ class Course extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function reviewRatings()
+    {
+        return $this->hasMany(ReviewRating::class);
     }
 }

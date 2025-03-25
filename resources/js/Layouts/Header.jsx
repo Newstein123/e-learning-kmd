@@ -6,7 +6,7 @@ import {
     Link,
     Button,
 } from "@heroui/react";
-
+import { usePage } from "@inertiajs/react";
 export const AcmeLogo = () => {
     return (
         <svg fill="none" height="36" viewBox="0 0 32 32" width="36">
@@ -21,6 +21,7 @@ export const AcmeLogo = () => {
 };
 
 export const Header = () => {
+    const { auth } = usePage().props;
     return (
         <Navbar>
             <NavbarBrand>
@@ -49,21 +50,27 @@ export const Header = () => {
                     </Link>
                 </NavbarItem>
             </NavbarContent>
-            <NavbarContent justify="end">
+            {auth.user ? (
                 <NavbarItem className="hidden lg:flex">
-                    <Link href={route("login")}>Login</Link>
+                    <Link href={route("dashboard")}>Dashboard</Link>
                 </NavbarItem>
-                <NavbarItem>
-                    <Button
-                        as={Link}
-                        color="primary"
-                        href={route("register")}
-                        variant="flat"
-                    >
-                        Sign Up
-                    </Button>
-                </NavbarItem>
-            </NavbarContent>
+            ) : (
+                <NavbarContent justify="end">
+                    <NavbarItem className="hidden lg:flex">
+                        <Link href={route("login")}>Login</Link>
+                    </NavbarItem>
+                    <NavbarItem>
+                        <Button
+                            as={Link}
+                            color="primary"
+                            href={route("register")}
+                            variant="flat"
+                        >
+                            Sign Up
+                        </Button>
+                    </NavbarItem>
+                </NavbarContent>
+            )}
         </Navbar>
     );
 };

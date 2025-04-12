@@ -12,8 +12,13 @@ class Enrollment extends Model
     protected $fillable = [
         'user_id',
         'course_id',
+        'name',
+        'email',
+        'phone',
+        'payment_proof',
+        'note',
+        'status',
         'enrolled_at',
-        'note'
     ];
 
     protected $casts = [

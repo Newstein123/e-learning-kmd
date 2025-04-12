@@ -24,6 +24,21 @@ class EnrollmentResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\TextInput::make('name')
+                    ->required(),
+                Forms\Components\TextInput::make('email')
+                    ->required(),
+                Forms\Components\TextInput::make('phone')
+                    ->required(),
+                Forms\Components\FileUpload::make('payment_proof')
+                    ->required(),
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'approved' => 'Approved',
+                        'rejected' => 'Rejected',
+                    ])
+                    ->required(),
                 Forms\Components\Select::make('user_id')
                     ->relationship('student', 'name', function ($query) {
                         return $query->where('role', 3); // student role id
@@ -47,16 +62,33 @@ class EnrollmentResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('student.name'),
+                TextColumn::make('student.name')->label('Student Name'),
+                TextColumn::make('name')->label('Contact Name'),
+                TextColumn::make('email')->label('Contact Email'),
+                TextColumn::make('phone')->label('Contact Phone'),
                 TextColumn::make('course.title'),
                 TextColumn::make('enrolled_at'),
-                TextColumn::make('note'),
+                TextColumn::make('status'),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\Action::make('approve')
+                        ->label('Approve')
+                        ->action(function ($record) {
+                            $record->update(['status' => 'approved']);
+                        })
+                        ->color('success'),
+                    Tables\Actions\Action::make('reject')
+                        ->label('Reject')
+                        ->action(function ($record) {
+                            $record->update(['status' => 'rejected']);
+                        })
+                        ->color('danger'),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

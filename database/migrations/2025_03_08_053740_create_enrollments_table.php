@@ -16,7 +16,12 @@ return new class extends Migration
             $table->foreignId("user_id")->constrained("users");
             $table->foreignId("course_id")->constrained("courses");
             $table->dateTime("enrolled_at");
+            $table->string("name");
+            $table->string("email");
+            $table->string("phone");
+            $table->string("payment_proof");
             $table->string("note")->nullable();
+            $table->enum("status", ["pending", "approved", "rejected"])->default("pending");
             $table->timestamps();
         });
     }

@@ -4,17 +4,20 @@ import { FaBook, FaCertificate, FaSearch } from "react-icons/fa";
 import ProcessCard from "../ProcessCard";
 const processes = [
     {
+        id: 1,
         icon: <FaSearch size={30} />,
         title: "Search for a course",
         description:
             "It has survived not only centurie also leap into electronic.",
     },
     {
+        id: 2,
         icon: <FaBook size={30} />,
         title: "Book A Seat",
         description: "Choose a course to get started",
     },
     {
+        id: 3,
         icon: <FaCertificate size={30} />,
         title: "Get Certificate",
         description: "Get your certificate after completing the course",

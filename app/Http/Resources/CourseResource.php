@@ -29,8 +29,9 @@ class CourseResource extends JsonResource
             'has_certificate' => $this->has_certificate,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'lessons' => $this->lessons,
+            'lessons' => LessonResource::collection($this->lessons),
             'review_ratings' => $this->reviewRatings,
+            'is_enrolled' => $this->enrollments()->where('user_id', auth()->user()->id)->where('status', 'approved')->exists(),
         ];
     }
 }

@@ -7,9 +7,13 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Course;
 use App\Models\Category;
+use App\Models\ContactForm;
+use App\Models\Enrollment;
 use App\Models\ReviewRating;
+use App\Models\UserAnswer;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
 {
@@ -71,5 +75,64 @@ class HomeController extends Controller
             'user_id' => auth()->user()->id,
         ]);
         return redirect()->back()->with('success', 'Review rating created successfully');
+    }
+
+    public function about()
+    {
+        return Inertia::render('About/Index');
+    }
+
+    public function contact()
+    {
+        return Inertia::render('Contact/Index');
+    }
+
+    public function storeContactForm(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'message' => 'required|string',
+        ]);
+
+        ContactForm::create($request->all());
+        return redirect()->back()->with('success', 'Contact form submitted successfully');
+    }
+
+    public function submitQuiz(Request $request)
+    {
+        $request->validate([
+            'quiz_id' => 'required|exists:quizzes,id',
+            'score' => 'required|integer|min:0',
+        ]);
+        $request->merge(['user_id' => auth()->user()->id]);
+        UserAnswer::create($request->all());
+        return redirect()->back()->with('success', 'Quiz submitted successfully');
+    }
+
+    public function enrollCourse(Request $request)
+    {
+        $request->validate([
+            'course_id' => 'required|exists:courses,id',
+            'user_id' => 'required|exists:users,id',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'phone' => 'required|string|max:255',
+            'payment_proof' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'note' => 'nullable|string',
+        ]);
+        $data = $request->all();
+        if (request()->hasFile('payment_proof')) {
+            $file = $request->file('payment_proof');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $path = Storage::putFileAs('payment_proofs', $file, $filename);
+            \Log::info('Payment proof path: ' . $path);
+            $data['payment_proof'] = $path;
+            $data['enrolled_at'] = now();
+            $data['status'] = 'pending';
+        }
+        \Log::info('Request data: ' . json_encode($data));
+        Enrollment::create($data);
+        return redirect()->back()->with('success', 'Course enrolled successfully');
     }
 }

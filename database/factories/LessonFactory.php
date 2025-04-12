@@ -20,7 +20,7 @@ class LessonFactory extends Factory
         return [
             'title' => fake()->sentence(3),
             'description' => fake()->paragraph(3),
-            'course_id' => Course::inRandomOrder()->first()->id,
+            'course_id' => Course::latest()->first()->id,
             'is_active' => fake()->boolean(90), // 90% chance of being active
             'video_thumbnail' => fake()->imageUrl(640, 480, 'education'),
             'video_url' => fake()->url(),

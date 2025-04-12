@@ -12,8 +12,8 @@ import {
     Link,
     Accordion,
     AccordionItem,
-    Input,
     Textarea,
+    useDisclosure,
 } from "@heroui/react";
 import {
     FaBook,
@@ -25,25 +25,32 @@ import {
     FaInstagram,
     FaCertificate,
     FaLanguage,
-    FaStar,
     FaSpinner,
+    FaCheckCircle,
 } from "react-icons/fa";
 import CourseDetailBanner from "../../images/CourseDetailBanner.webp";
-import { usePage } from "@inertiajs/react";
-import { useForm } from "@inertiajs/react";
+import { usePage, useForm } from "@inertiajs/react";
 import StarRating from "@/Components/StarRating";
 import { Toaster, toast } from "react-hot-toast";
 import ReviewCard from "./ReviewCard";
 import LessonCard from "./LessonCard";
+import EnrollmentModal from "./EnrollmentModal";
 
 const Show = ({ course }) => {
     const { auth } = usePage().props;
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const { data, setData, post, errors, processing } = useForm({
         course_id: course.id,
-        user_id: auth.user.id,
+        user_id: auth.user?.id,
         rating: 5,
         review: "",
     });
+    const getDuration = (duration) => {
+        const hours = Math.floor(duration / 3600);
+        const minutes = Math.floor((duration % 3600) / 60);
+        const seconds = duration % 60;
+        return `${hours}h ${minutes}m ${seconds}s`;
+    };
     const handleSubmit = (e) => {
         e.preventDefault();
         post(route("review-ratings.store", course.id), {
@@ -62,6 +69,11 @@ const Show = ({ course }) => {
     return (
         <div className="container mx-auto px-4 py-16">
             <Toaster position="top-right" reverseOrder={false} />
+            <EnrollmentModal
+                course={course}
+                isOpen={isOpen}
+                onOpenChange={onOpenChange}
+            />
             <DetialBannerSection course={course} />
             <div className="flex flex-col md:flex-row justify-between items-center my-10 gap-10">
                 <div className="w-full md:w-2/3">
@@ -114,7 +126,31 @@ const Show = ({ course }) => {
                                                             }
                                                             key={lesson.id}
                                                             aria-label="Accordion 1"
-                                                            title={lesson.title}
+                                                            title={
+                                                                <div>
+                                                                    <p className="flex justify-between items-center">
+                                                                        <span>
+                                                                            {
+                                                                                lesson.title
+                                                                            }
+                                                                        </span>
+                                                                        <span>
+                                                                            {lesson
+                                                                                .quiz
+                                                                                ?.score ? (
+                                                                                <FaCheckCircle className="text-green-500" />
+                                                                            ) : (
+                                                                                <div className="flex items-center gap-2">
+                                                                                    <FaClock className="text-red-500" />
+                                                                                    {getDuration(
+                                                                                        lesson.duration
+                                                                                    )}
+                                                                                </div>
+                                                                            )}
+                                                                        </span>
+                                                                    </p>
+                                                                </div>
+                                                            }
                                                         >
                                                             <LessonCard
                                                                 lesson={lesson}
@@ -224,7 +260,7 @@ const Show = ({ course }) => {
                     </div>
                 </div>
                 <div className="w-full md:w-1/3">
-                    <CorseDetailCard course={course} />
+                    <CorseDetailCard course={course} onOpen={onOpen} />
                     <p className="text-2xl font-bold my-5">Share this course</p>
                     <div className="flex items-center gap-2">
                         <Button color="primary">
@@ -249,7 +285,8 @@ const Show = ({ course }) => {
 export default Show;
 Show.layout = (page) => <FrontendLayout>{page}</FrontendLayout>;
 
-const CorseDetailCard = ({ course }) => {
+const CorseDetailCard = ({ course, onOpen }) => {
+    const { auth } = usePage().props;
     return (
         <div className="bg-gray-100 p-5 rounded-md border-2 border-gray-200">
             <h1 className="text-4xl font-bold text-center my-5">
@@ -339,6 +376,16 @@ const CorseDetailCard = ({ course }) => {
                     </p>
                 </div>
             </div>
+            <Divider />
+            {auth.user && !course.is_enrolled && (
+                <Button
+                    color="secondary"
+                    className="w-full mt-5"
+                    onPress={onOpen}
+                >
+                    Enroll Now
+                </Button>
+            )}
         </div>
     );
 };

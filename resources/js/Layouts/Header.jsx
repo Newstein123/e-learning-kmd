@@ -3,10 +3,10 @@ import {
     NavbarBrand,
     NavbarContent,
     NavbarItem,
-    Link,
     Button,
 } from "@heroui/react";
 import { usePage } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
 export const AcmeLogo = () => {
     return (
         <svg fill="none" height="36" viewBox="0 0 32 32" width="36">
@@ -29,23 +29,23 @@ export const Header = () => {
                 <p className="font-bold text-inherit">ACME</p>
             </NavbarBrand>
             <NavbarContent className="hidden sm:flex gap-4" justify="center">
-                <NavbarItem>
+                <NavbarItem isActive={route().current("home")}>
                     <Link color="foreground" href={route("home")}>
                         Home
                     </Link>
                 </NavbarItem>
-                <NavbarItem isActive>
+                <NavbarItem isActive={route().current("courses")}>
                     <Link aria-current="page" href={route("courses")}>
                         Courses
                     </Link>
                 </NavbarItem>
-                <NavbarItem>
-                    <Link color="foreground" href="#">
+                <NavbarItem isActive={route().current("about")}>
+                    <Link color="foreground" href={route("about")}>
                         About
                     </Link>
                 </NavbarItem>
-                <NavbarItem>
-                    <Link color="foreground" href="#">
+                <NavbarItem isActive={route().current("contact")}>
+                    <Link color="foreground" href={route("contact")}>
                         Contact
                     </Link>
                 </NavbarItem>

@@ -14,6 +14,7 @@ use App\Models\UserAnswer;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 
 class HomeController extends Controller
 {
@@ -134,5 +135,12 @@ class HomeController extends Controller
         \Log::info('Request data: ' . json_encode($data));
         Enrollment::create($data);
         return redirect()->back()->with('success', 'Course enrolled successfully');
+    }
+
+    public function certificate($courseId, $userId)
+    {
+        $course = Course::find($courseId);
+        $user = User::find($userId);
+        return view('certificate', compact('course', 'user'));
     }
 }

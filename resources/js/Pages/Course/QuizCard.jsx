@@ -23,6 +23,7 @@ const QuizCard = ({ quiz }) => {
                 onError: () => {
                     toast.error("Quiz submission failed");
                 },
+                preserveScroll: true,
             }
         );
     };

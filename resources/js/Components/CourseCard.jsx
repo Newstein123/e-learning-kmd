@@ -11,6 +11,12 @@ import {
 } from "@heroui/react";
 import { router } from "@inertiajs/react";
 const CourseCard = ({ course }) => {
+    const getDuration = (duration) => {
+        const hours = Math.floor(duration / 3600);
+        const minutes = Math.floor((duration % 3600) / 60);
+        const seconds = duration % 60;
+        return `${hours}h ${minutes}m ${seconds}s`;
+    };
     return (
         <div>
             <Card className="py-4">
@@ -52,14 +58,16 @@ const CourseCard = ({ course }) => {
                         </div>
                         <div className="w-1/2">
                             <p className="text-default-500">
-                                {course.duration}
+                                {getDuration(course.duration)}
                             </p>
                         </div>
                     </div>
                     {/* price  */}
                     <div className="flex">
                         <div className="w-1/2">
-                            <p className="text-default-500">{course.price}</p>
+                            <p className="text-default-500">
+                                {course.price} USD
+                            </p>
                         </div>
                     </div>
                 </CardBody>

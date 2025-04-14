@@ -44,7 +44,8 @@ class QuizResource extends Resource
                 Tables\Columns\TextColumn::make('description'),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('lesson_id')
+                    ->relationship('lesson', 'title'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

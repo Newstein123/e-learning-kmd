@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "@heroui/react";
 import Banner from "../../images/Banner.webp";
 import { Image } from "@heroui/react";
+import { Link } from "@inertiajs/react";
 const HeroSection = () => {
     return (
         <div className="bg-gradient-to-r from-blue-500 to-purple-500">
@@ -16,7 +17,14 @@ const HeroSection = () => {
                             comprehensive courses.
                         </p>
                         <div className="flex justify-center">
-                            <Button color="secondary">Get Started</Button>
+                            <Button
+                                as={Link}
+                                href="/courses"
+                                color="secondary"
+                                className="rounded-full"
+                            >
+                                Get Started
+                            </Button>
                         </div>
                     </div>
                     <div className="w-2/3">

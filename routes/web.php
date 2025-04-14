@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/contact', [HomeController::class, 'storeContactForm'])->name('contact.store');
     Route::post('/submit-quiz', [HomeController::class, 'submitQuiz'])->name('quiz.submit');
     Route::post('/enroll-course', [HomeController::class, 'enrollCourse'])->name('enroll.course');
+    Route::get('/certificate/{courseId}/{userId}', [HomeController::class, 'certificate'])->name('certificate');
 });
 
 require __DIR__ . '/auth.php';

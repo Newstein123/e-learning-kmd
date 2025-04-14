@@ -54,7 +54,8 @@ class LessonResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title'),
+                Tables\Columns\TextColumn::make('id')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('title')->sortable()->searchable(),
                 Tables\Columns\ImageColumn::make('video_thumbnail'),
                 Tables\Columns\TextColumn::make('order'),
                 Tables\Columns\TextColumn::make('duration'),

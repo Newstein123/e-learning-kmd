@@ -13,10 +13,10 @@ class RecentEnrollmentsWidget extends BaseWidget
     {
         return $table
             ->query(
-                Enrollment::query()->with('user', 'course')->latest()
+                Enrollment::query()->with('student', 'course')->latest()
             )
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')->label('Student'),
+                Tables\Columns\TextColumn::make('student.name')->label('Student'),
                 Tables\Columns\TextColumn::make('course.title')->label('Course'),
                 Tables\Columns\TextColumn::make('created_at')->label('Enrolled On')->date(),
             ]);

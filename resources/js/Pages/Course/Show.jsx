@@ -14,6 +14,8 @@ import {
     AccordionItem,
     Textarea,
     useDisclosure,
+    Alert,
+    Avatar,
 } from "@heroui/react";
 import {
     FaBook,
@@ -37,6 +39,7 @@ import LessonCard from "./LessonCard";
 import EnrollmentModal from "./EnrollmentModal";
 
 const Show = ({ course }) => {
+    console.log(course);
     const { auth } = usePage().props;
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const { data, setData, post, errors, processing } = useForm({
@@ -82,15 +85,16 @@ const Show = ({ course }) => {
                         alt={course.title}
                         className="w-full h-96 object-cover rounded-md"
                     />
-                    <h1 className="text-4xl font-bold">{course.title}</h1>
+                    <h1 className="text-4xl font-bold mt-5">{course.title}</h1>
                     <div className="flex justify-between items-center">
                         <div className="w-1/2">
                             {/* instructor profile  */}
                             <div className="flex items-center gap-2">
-                                <img
+                                <Avatar
                                     src={course.instructor?.avatar}
                                     alt={course.instructor?.name}
-                                    className="w-20 h-20 rounded-full"
+                                    className="w-16 h-16 rounded-full"
+                                    name={course.instructor?.name}
                                 />
                                 <h1 className="text-2xl font-bold">
                                     {course.instructor?.name}
@@ -168,26 +172,42 @@ const Show = ({ course }) => {
                             <Tab key="instructor" title="Instructor">
                                 <Card>
                                     <CardBody>
-                                        <div className="flex flex-col items-center gap-2">
-                                            <img
-                                                src={course.instructor?.avatar}
-                                                alt={course.instructor?.name}
-                                                className="w-20 h-20 rounded-full"
-                                            />
-                                            <h1 className="text-2xl font-bold">
-                                                {course.instructor?.name}
-                                            </h1>
-                                            <p className="text-default-500">
-                                                {course.instructor?.position}
-                                            </p>
+                                        <div className="flex justify-center items-center">
+                                            <div className="w-1/2 border-2 border-gray-200 rounded-md p-5 bg-secondary-50">
+                                                <div className="flex flex-col items-center gap-2 mb-5">
+                                                    <Avatar
+                                                        src={
+                                                            course.instructor
+                                                                ?.avatar
+                                                        }
+                                                        alt={
+                                                            course.instructor
+                                                                ?.name
+                                                        }
+                                                        className="w-16 h-16 rounded-full"
+                                                    />
+                                                    <h1 className="text-2xl font-bold">
+                                                        {
+                                                            course.instructor
+                                                                ?.name
+                                                        }
+                                                    </h1>
+                                                    <p className="text-default-500">
+                                                        {
+                                                            course.instructor
+                                                                ?.position
+                                                        }
+                                                    </p>
+                                                </div>
+                                                <div
+                                                    className="prose"
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: course
+                                                            .instructor?.about,
+                                                    }}
+                                                />
+                                            </div>
                                         </div>
-                                        <div
-                                            className="prose"
-                                            dangerouslySetInnerHTML={{
-                                                __html: course.instructor
-                                                    ?.about,
-                                            }}
-                                        />
                                     </CardBody>
                                 </Card>
                             </Tab>
@@ -258,6 +278,25 @@ const Show = ({ course }) => {
                             </Tab>
                         </Tabs>
                     </div>
+                    {course.has_certificate && auth.user && (
+                        <div className="mt-5">
+                            <div className="flex justify-between items-center">
+                                <Button
+                                    as={Link}
+                                    href={route("certificate", {
+                                        courseId: course.id,
+                                        userId: auth.user.id,
+                                    })}
+                                    isDisabled={!course.has_finished}
+                                    color="secondary"
+                                    variant="light"
+                                    target="_blank"
+                                >
+                                    View Certificate
+                                </Button>
+                            </div>
+                        </div>
+                    )}
                 </div>
                 <div className="w-full md:w-1/3">
                     <CorseDetailCard course={course} onOpen={onOpen} />
@@ -284,6 +323,13 @@ const Show = ({ course }) => {
 
 export default Show;
 Show.layout = (page) => <FrontendLayout>{page}</FrontendLayout>;
+
+const getDuration = (duration) => {
+    const hours = Math.floor(duration / 3600);
+    const minutes = Math.floor((duration % 3600) / 60);
+    const seconds = duration % 60;
+    return `${hours}h ${minutes}m ${seconds}s`;
+};
 
 const CorseDetailCard = ({ course, onOpen }) => {
     const { auth } = usePage().props;
@@ -317,7 +363,9 @@ const CorseDetailCard = ({ course, onOpen }) => {
                     </div>
                 </div>
                 <div className="w-1/2">
-                    <p className="text-default-500">{course.duration}</p>
+                    <p className="text-default-500">
+                        {getDuration(course.duration)}
+                    </p>
                 </div>
             </div>
             <Divider />
@@ -376,9 +424,15 @@ const CorseDetailCard = ({ course, onOpen }) => {
                     </p>
                 </div>
             </div>
-            <Divider />
+            <Divider className="my-5" />
+            {auth.user && course.payment_status === "pending" && (
+                <Alert color="warning">
+                    Please wait for the payment to be approved
+                </Alert>
+            )}
             {auth.user && !course.is_enrolled && (
                 <Button
+                    isDisabled={course.payment_status === "pending"}
                     color="secondary"
                     className="w-full mt-5"
                     onPress={onOpen}
